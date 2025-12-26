@@ -2,7 +2,7 @@
 
 import structlog
 import torch
-from transformers import AutoModel, AutoTokenizer
+from transformers import AutoModel, AutoTokenizer, PreTrainedModel, PreTrainedTokenizerBase
 
 from .exceptions import EmbeddingError, ModelLoadError
 from .models import CodeSnippet, Embedding
@@ -51,8 +51,8 @@ class CodeEmbeddingService:
         self.device = self._resolve_device(device)
 
         # Lazy loading - model and tokenizer are None until first use
-        self._model: AutoModel | None = None
-        self._tokenizer: AutoTokenizer | None = None
+        self._model: PreTrainedModel | None = None
+        self._tokenizer: PreTrainedTokenizerBase | None = None
 
         logger.info(
             "initialized_embedding_service",
