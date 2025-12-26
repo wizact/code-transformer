@@ -7,13 +7,13 @@ Transform source code into semantic embeddings for AI-powered code understanding
 Code Transformer processes code snippets from any programming language and generates normalized vector embeddings using state-of-the-art transformer models. These embeddings enable semantic code search, similarity detection, and AI-assisted development tools.
 
 **Key Features:**
-- 🚀 **Streaming Architecture**: Process codebases of any size with constant memory usage (< 500MB)
-- 🧠 **Transformer-Based**: Uses CodeBERT and other HuggingFace models
-- 🎯 **Mean Pooling + L2 Normalization**: Ready for cosine similarity without additional processing
-- ⚡ **Async I/O**: Non-blocking file operations with async/await
-- 🔧 **Hexagonal Architecture**: Swappable input/output adapters for extensibility
-- 📊 **Multi-Language**: Python, Go, JavaScript, Java, and more
-- ✅ **95%+ Test Coverage**: Comprehensive unit and integration tests
+- Streaming architecture: Process codebases of any size with constant memory usage (< 500MB)
+- Transformer-based: Uses CodeBERT and other HuggingFace models
+- Mean pooling + L2 normalization: Ready for cosine similarity without additional processing
+- Async I/O: Non-blocking file operations with async/await
+- Hexagonal architecture: Swappable input/output adapters for extensibility
+- Multi-language: Python, Go, JavaScript, Java, and more
+- ✅ 95%+ test coverage: Comprehensive unit and integration tests
 
 ## Quick Start
 
@@ -122,36 +122,6 @@ Use these templates when creating new feature specifications:
 - **[Design Template](docs/features/TEMPLATES/design.md)**: Architecture, components, data flow, algorithms
 - **[Tasks Template](docs/features/TEMPLATES/tasks.md)**: Implementation breakdown, progress tracking, lessons learned
 
-## Architecture
-
-Code Transformer follows **Hexagonal Architecture** (Ports & Adapters):
-
-```
-┌─────────────────────────────────────────┐
-│          Application Layer              │
-│         (EmbeddingPipeline)             │
-│  • Orchestrates data flow                │
-│  • Manages batching                      │
-│  • Coordinates async/sync boundary       │
-└────────────┬──────────────┬─────────────┘
-             │              │
-      ┌──────▼──────┐  ┌───▼──────────┐
-      │   Domain    │  │   Adapters   │
-      │  Services   │  │ (Ports impl) │
-      │             │  │              │
-      │ Embedding   │  │ JSONLReader  │
-      │  Service    │  │ Writer       │
-      └─────────────┘  └──────────────┘
-```
-
-**Core Components:**
-- **Domain**: `CodeEmbeddingService` (pure business logic, no dependencies)
-- **Ports**: `InputAdapter`, `OutputAdapter` (interface definitions)
-- **Adapters**: `JSONLReader`, `EmbeddingWriter` (I/O implementations)
-- **Application**: `EmbeddingPipeline` (orchestration)
-
-See [CLAUDE.md](CLAUDE.md) for detailed architectural principles.
-
 ## Development
 
 ### Setup
@@ -196,116 +166,3 @@ mypy src/
 # Run all checks
 ruff format && ruff check --fix && mypy src/ && pytest
 ```
-
-### Project Structure
-
-```
-code-transformer/
-├── docs/                    # Documentation
-│   ├── constitution/        # Long-term principles
-│   ├── features/            # Feature specifications
-│   │   ├── TEMPLATES/       # Templates for new features
-│   │   └── f001-*/          # Implemented features
-├── src/code_transformer/
-│   ├── domain/              # Core business logic
-│   ├── adapters/            # I/O implementations
-│   ├── application/         # Orchestration
-│   └── cli/                 # Command-line interface
-├── tests/
-│   ├── unit/                # Isolated component tests
-│   └── integration/         # End-to-end tests
-├── CLAUDE.md                # Constitutional principles
-├── README.md                # This file
-└── pyproject.toml           # Project configuration
-```
-
-## Technology Stack
-
-- **Python**: 3.11+
-- **PyTorch**: 2.0+ (deep learning framework)
-- **Transformers**: 4.30+ (HuggingFace model library)
-- **aiofiles**: Async file I/O
-- **Pydantic**: Configuration validation
-- **structlog**: Structured logging
-- **uv**: Fast dependency management
-- **ruff**: Linting and formatting
-- **mypy**: Static type checking
-- **pytest**: Testing framework
-
-## Performance
-
-- **Throughput**: 100+ snippets/second on CPU
-- **Memory**: < 500MB regardless of input size
-- **Streaming**: Processes arbitrarily large files
-- **Batching**: Configurable batch size (8-64, default 16)
-
-## Requirements
-
-- Python 3.11 or higher
-- PyTorch 2.0+
-- 8GB RAM (16GB recommended for GPU)
-- Optional: CUDA-compatible GPU for faster inference
-
-## Contributing
-
-We welcome contributions! Please follow these guidelines:
-
-1. **Read the documentation**:
-   - [CLAUDE.md](CLAUDE.md) for architectural principles
-   - [Technical Standards](docs/constitution/tech.md) for code style
-   - [Features README](docs/features/README.md) for specification process
-
-2. **For new features**:
-   - Use templates in `docs/features/TEMPLATES/`
-   - Create specification before implementation
-   - Follow hexagonal architecture pattern
-
-3. **Before submitting**:
-   - Write tests for all new code (95%+ coverage target)
-   - Run all code quality checks (format, lint, typecheck, test)
-   - Update documentation if needed
-
-4. **Code style**:
-   - Type hints on all functions
-   - Frozen dataclasses for immutability
-   - Explicit over implicit
-   - Single responsibility per component
-
-## Roadmap
-
-### v1.0 (Current) ✅
-- Streaming pipeline with JSONL I/O
-- CodeBERT embeddings with mean pooling
-- Async I/O for performance
-- Comprehensive testing
-
-### v2.0 (Planned) 🔮
-- Vector database output adapters
-- Multiple embedding model support
-- CLI interface for batch processing
-- Performance optimizations
-
-### v3.0+ (Future) 🔮
-- Custom model fine-tuning
-- Incremental embedding updates
-- Web API for real-time embedding
-- Distributed processing
-
-See [Product Vision](docs/constitution/product.md) for detailed roadmap.
-
-## License
-
-[License information to be added]
-
-## Acknowledgments
-
-Built with:
-- [CodeBERT](https://github.com/microsoft/CodeBERT) by Microsoft
-- [HuggingFace Transformers](https://huggingface.co/transformers/)
-- [PyTorch](https://pytorch.org/)
-
-## Contact
-
-- **Issues**: Create an issue on GitHub
-- **Discussions**: Check GitHub Discussions
-- **Documentation**: Start with [CLAUDE.md](CLAUDE.md)

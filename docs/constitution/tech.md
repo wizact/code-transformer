@@ -40,10 +40,61 @@
 - Auto-fix for many issues
 
 ### Architecture
-- **Hexagonal (Ports & Adapters)**: Clean separation of concerns
+
+Code Transformer follows **Hexagonal Architecture** (Ports & Adapters):
+
+```
+┌─────────────────────────────────────────┐
+│          Application Layer              │
+│         (EmbeddingPipeline)             │
+│  • Orchestrates data flow                │
+│  • Manages batching                      │
+│  • Coordinates async/sync boundary       │
+└────────────┬──────────────┬─────────────┘
+             │              │
+      ┌──────▼──────┐  ┌───▼──────────┐
+      │   Domain    │  │   Adapters   │
+      │  Services   │  │ (Ports impl) │
+      │             │  │              │
+      │ Embedding   │  │ JSONLReader  │
+      │  Service    │  │ Writer       │
+      └─────────────┘  └──────────────┘
+```
+
+**Core Components:**
+- **Domain**: `CodeEmbeddingService` (pure business logic, no dependencies)
+- **Ports**: `InputAdapter`, `OutputAdapter` (interface definitions)
+- **Adapters**: `JSONLReader`, `EmbeddingWriter` (I/O implementations)
+- **Application**: `EmbeddingPipeline` (orchestration)
+
+**Key Patterns:**
 - **Async I/O**: aiofiles for non-blocking file operations
 - **Thread Pool**: asyncio.to_thread() for CPU-bound inference
 - **Structured Logging**: structlog with JSON output
+
+See [CLAUDE.md](../../CLAUDE.md) for comprehensive architectural principles.
+
+## Project Structure
+
+```
+code-transformer/
+├── docs/                    # Documentation
+│   ├── constitution/        # Long-term principles
+│   ├── features/            # Feature specifications
+│   │   ├── TEMPLATES/       # Templates for new features
+│   │   └── f001-*/          # Implemented features
+├── src/code_transformer/
+│   ├── domain/              # Core business logic
+│   ├── adapters/            # I/O implementations
+│   ├── application/         # Orchestration
+│   └── cli/                 # Command-line interface
+├── tests/
+│   ├── unit/                # Isolated component tests
+│   └── integration/         # End-to-end tests
+├── CLAUDE.md                # Constitutional principles
+├── README.md                # Quick start guide
+└── pyproject.toml           # Project configuration
+```
 
 ## Design Standards
 
