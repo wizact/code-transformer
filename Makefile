@@ -57,7 +57,7 @@ install:
 	uv sync --no-dev
 
 dev:
-	uv sync
+	uv sync --dev
 
 clean:
 	rm -rf .pytest_cache
